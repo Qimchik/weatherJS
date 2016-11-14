@@ -4,3 +4,53 @@
  * <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css" /> */
 
 @import "compass/reset";
+
+
+header{
+	background-color: rgb(250,200,100);
+	height: 70px;
+	line-height: 70px;
+	padding-left: 50px;
+}
+
+.sectionForAddTab{
+	background-color: rgb(255,220,120);
+	height: 70px;
+	line-height: 70px;
+	padding: 10px 0px 10px 50px;
+}
+
+.tabs{
+	background-color: rgb(230,180,80);
+	height: 30px;
+	padding: 20px 0px 0px 50px;
+	overflow: hidden;
+	.tab{
+		display: inline-block;
+		float: left;
+		height: 30px;
+		margin-right: 10px;
+		text-align-last: center;
+		text-align: center;
+		line-height: 30px;
+		width: 100px;
+		cursor: pointer;
+		&:hover{
+			background-color: rgb(100,50,30);
+		}
+	}
+	.currentTab{
+		background-color: rgb(100,50,30);
+	}
+}
+.tabs:after{
+	clear: both;
+}
+.weatherView{
+	background-color: rgb(205,220,150);
+	height: 70px;
+	box-sizing: border-box;
+	width: 100%;
+	line-height: 70px;
+	padding: 10px 0px 10px 50px;
+}

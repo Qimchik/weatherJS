@@ -66,3 +66,62 @@ a img {
 article, aside, details, figcaption, figure, footer, header, hgroup, main, menu, nav, section, summary {
   display: block;
 }
+
+/* line 9, ../sass/style.scss */
+header {
+  background-color: #fac864;
+  height: 70px;
+  line-height: 70px;
+  padding-left: 50px;
+}
+
+/* line 16, ../sass/style.scss */
+.sectionForAddTab {
+  background-color: #ffdc78;
+  height: 70px;
+  line-height: 70px;
+  padding: 10px 0px 10px 50px;
+}
+
+/* line 23, ../sass/style.scss */
+.tabs {
+  background-color: #e6b450;
+  height: 30px;
+  padding: 20px 0px 0px 50px;
+  overflow: hidden;
+}
+/* line 28, ../sass/style.scss */
+.tabs .tab {
+  display: inline-block;
+  float: left;
+  height: 30px;
+  margin-right: 10px;
+  text-align-last: center;
+  text-align: center;
+  line-height: 30px;
+  width: 100px;
+  cursor: pointer;
+}
+/* line 38, ../sass/style.scss */
+.tabs .tab:hover {
+  background-color: #64321e;
+}
+/* line 42, ../sass/style.scss */
+.tabs .currentTab {
+  background-color: #64321e;
+}
+
+/* line 46, ../sass/style.scss */
+.tabs:after {
+  clear: both;
+}
+
+/* line 49, ../sass/style.scss */
+.weatherView {
+  background-color: #cddc96;
+  height: 70px;
+  box-sizing: border-box;
+  width: 100%;
+  line-height: 70px;
+  padding: 10px 0px 10px 50px;
+}
