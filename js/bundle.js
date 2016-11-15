@@ -85,8 +85,10 @@
 			    json = void 0;
 			xmlhttp.open('GET', url, false);
 			xmlhttp.send(null);
-			console.log(xmlhttp.status);
-			if (xmlhttp.status !== 200) return false;
+			if (xmlhttp.status !== 200) {
+				alert('We cant find your city. Sorry');
+				return false;
+			}
 			json = eval('(' + xmlhttp.responseText + ')');
 			return json;
 		},
@@ -104,21 +106,51 @@
 				fullWeather: newCurrentTab
 			});
 		},
+		firstView: function firstView() {
+			if (!this.state.jsonArr) {
+				return false;
+			}
+			this.handleWeatherUpdate(this.state.jsonArr[0]);
+			return true;
+		},
 		mapArr: function mapArr(that) {
 			var jsx = that.state.jsonArr.map(function (tab) {
 				return React.createElement(_tab.Tab, { key: tab.id,
-					current: that.state.fullWeather === null ? false : tab.id === that.state.fullWeather.id,
+					current: that.state.fullWeather === null ? that.firstView() : tab.id === that.state.fullWeather.id,
 					tabLink: tab,
+					removeTab: that.removeTab,
 					fullWeather: that.handleWeatherUpdate });
 			});
 			return jsx;
 		},
 		addTab: function addTab(city) {
+			if (this.state.jsonArr.length > 5) {
+				alert('Too much tabs. Please remove any tab to create new.');
+				return false;
+			}
 			var tab = this.getJson('http://api.openweathermap.org/data/2.5/weather?q=' + city + '&appid=5eca46ddb92cb7b41c092d7991685bf5');
+			var repeatCity = false;
+
+			this.state.jsonArr.map(function (item) {
+				if (item.id === tab.id) {
+					repeatCity = true;
+					return false;
+				}
+			});
+
+			if (repeatCity) {
+				alert('You have added this city already.');
+				return false;
+			}
+
 			if (tab) {
 				this.state.jsonArr.push(tab);
 				this.handleWeatherUpdate(this.state.fullWeather);
 			}
+		},
+		removeTab: function removeTab(tab) {
+			this.state.jsonArr.splice(this.state.jsonArr.indexOf(tab), 1);
+			this.handleWeatherUpdate(this.state.fullWeather);
 		},
 		render: function render() {
 			return React.createElement(
@@ -19877,6 +19909,14 @@
 		handleTabChange: function handleTabChange(e) {
 			this.props.fullWeather(this.props.tabLink);
 		},
+		removeTab: function removeTab(e) {
+			this.props.removeTab(this.props.tabLink);
+			if (this.props.current) {
+				this.props.fullWeather(null);
+			}
+			e.stopPropagation();
+			return false;
+		},
 		render: function render() {
 			return React.createElement(
 				'div',
@@ -19886,6 +19926,11 @@
 					'span',
 					{ className: 'city' },
 					this.props.tabLink.name
+				),
+				React.createElement(
+					'span',
+					{ className: 'removeTab', onClick: this.removeTab },
+					'\xD7'
 				)
 			);
 		}
@@ -19903,11 +19948,72 @@
 	var WeatherView = exports.WeatherView = React.createClass({
 		displayName: "WeatherView",
 
-		render: function render() {
+		componentDidUpdate: function componentDidUpdate() {
+			if (this.props.fullWeather) {
+				document.getElementById('bgWeather').style = "background: url('img/" + this.props.fullWeather.weather[0].main + ".gif');\
+					background-size: 100% auto;";
+			}return true;
+		},
+		check: function check() {
+			if (this.props.fullWeather === null) return React.createElement(
+				"div",
+				{ className: "weatherView" },
+				React.createElement(
+					"h2",
+					null,
+					"Add city. Thank you"
+				)
+			);
 			return React.createElement(
 				"div",
 				{ className: "weatherView" },
-				JSON.stringify(this.props.fullWeather)
+				React.createElement(
+					"h2",
+					null,
+					this.props.fullWeather.name
+				),
+				React.createElement(
+					"p",
+					null,
+					"main: ",
+					this.props.fullWeather.weather[0].main
+				),
+				React.createElement(
+					"div",
+					null,
+					React.createElement("img", { src: "img/termp.jpg", height: "100px", alt: "img" }),
+					React.createElement(
+						"p",
+						null,
+						"Maximum temperature: ",
+						this.props.fullWeather.main.temp_max
+					),
+					React.createElement(
+						"p",
+						null,
+						"Temperature: ",
+						this.props.fullWeather.main.temp_max
+					),
+					React.createElement(
+						"p",
+						null,
+						"Minimum temperature: ",
+						this.props.fullWeather.main.temp_min
+					)
+				),
+				React.createElement(
+					"p",
+					null,
+					"main: ",
+					this.props.fullWeather.weather[0].main
+				)
+			);
+		},
+		render: function render() {
+			return React.createElement(
+				"div",
+				{ id: "bgWeather", className: "bgWeather" },
+				this.check()
 			);
 		}
 	});

@@ -31,8 +31,10 @@ var WeatherApp = React.createClass({
 		json;
 		xmlhttp.open('GET', url, false);
 		xmlhttp.send(null);
-		console.log(xmlhttp.status);
-		if(xmlhttp.status !== 200) return false;
+		if(xmlhttp.status !== 200) {
+			alert('We cant find your city. Sorry');
+			return false;
+		}
 		json=eval( '('+xmlhttp.responseText+')' )
 		return json;
 	},
@@ -50,21 +52,52 @@ var WeatherApp = React.createClass({
 			fullWeather: newCurrentTab
 		})
 	},
+	firstView: function() {
+		if (!this.state.jsonArr){
+			return false;
+		}
+		this.handleWeatherUpdate(this.state.jsonArr[0]);
+		return true;
+	},
 	mapArr: function(that) {
 		let jsx=that.state.jsonArr.map(function(tab) {
 			return (<Tab key={tab.id} 
-				current={that.state.fullWeather === null?false:tab.id === that.state.fullWeather.id} 
+				current={that.state.fullWeather === null?
+					that.firstView():tab.id === that.state.fullWeather.id} 
 				tabLink = {tab} 
+				removeTab={that.removeTab}
 				fullWeather={that.handleWeatherUpdate}/>)
 		})
 		return jsx;
 	},
 	addTab: function(city) {
+		if(this.state.jsonArr.length>5) {
+			alert('Too much tabs. Please remove any tab to create new.');
+			return false;
+		}
 		let tab = this.getJson('http://api.openweathermap.org/data/2.5/weather?q='+city+'&appid=5eca46ddb92cb7b41c092d7991685bf5');
+		let repeatCity = false;
+
+		this.state.jsonArr.map(function(item){
+			if(item.id === tab.id){
+				repeatCity = true;
+				return false;
+			}
+		});
+
+		if(repeatCity) {
+			alert('You have added this city already.');
+			return false;
+		}
+
 		if (tab){	
 			this.state.jsonArr.push(tab);
 			this.handleWeatherUpdate(this.state.fullWeather);
 		}
+	},
+	removeTab: function(tab) {
+		this.state.jsonArr.splice(this.state.jsonArr.indexOf(tab),1);
+		this.handleWeatherUpdate(this.state.fullWeather);
 	},
 	render: function() {
 		return (

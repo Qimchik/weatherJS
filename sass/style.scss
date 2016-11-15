@@ -5,26 +5,37 @@
 
 @import "compass/reset";
 
+$bgTabSelect: rgba(150,150,150,0.7);
+$minWidthDesk: 1079px;
 
 header{
-	background-color: rgb(250,200,100);
+	background-color: rgb(100,0,170);
 	height: 70px;
 	line-height: 70px;
 	padding-left: 50px;
+	h1{
+		font-size: 25px;;
+		color: white;
+	}
 }
 
 .sectionForAddTab{
-	background-color: rgb(255,220,120);
-	height: 70px;
-	line-height: 70px;
-	padding: 10px 0px 10px 50px;
+	background-color: rgb(100,0,150);
+	height: 50px;
+	line-height: 50px;
+	padding: 5px 0px 5px 50px;
 }
 
 .tabs{
-	background-color: rgb(230,180,80);
 	height: 30px;
+	@media (max-width: $minWidthDesk) {
+		height: auto;
+		background-color: rgb(70,0,140);
+	}
 	padding: 20px 0px 0px 50px;
 	overflow: hidden;
+	z-index: 50;
+	position: relative;
 	.tab{
 		display: inline-block;
 		float: left;
@@ -33,24 +44,86 @@ header{
 		text-align-last: center;
 		text-align: center;
 		line-height: 30px;
-		width: 100px;
+		width: 150px;
 		cursor: pointer;
+		border-radius: 8px 8px 0 0;
+		@media (max-width: $minWidthDesk) {
+			border-radius: 8px;
+			margin: 10px;
+		}
+		border: 1px solid rgb(100,100,100);
+		background-color: rgb(100,100,100);
+		.city{
+			display: inline-block;
+			float: left;
+			padding: 0 5px;
+			max-width: 100px;
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+		}
+		img{
+			display: inline-block;
+			float: left;
+			margin: 8px 0 0 5px;
+		}
 		&:hover{
-			background-color: rgb(100,50,30);
+			background-color: $bgTabSelect;
 		}
 	}
 	.currentTab{
-		background-color: rgb(100,50,30);
+		background-color: $bgTabSelect;
+	}
+	.removeTab{
+		background-color: rgb(255,255,255);
+		display: inline-block;
+		float: right;
+		height: 16px;
+		width: 16px;
+		line-height: 15px;
+		cursor: pointer;
+		border-radius: 50%;
+		&:hover{
+			background-color: rgb(255,0,0);
+		}
 	}
 }
 .tabs:after{
 	clear: both;
 }
-.weatherView{
-	background-color: rgb(205,220,150);
-	height: 70px;
-	box-sizing: border-box;
+.bgWeather{
+	height: 500px;
+	position: relative;
+	top: -50px;
+	padding-top: 50px;
+	@media (max-width: $minWidthDesk) {
+		top: 0px;
+		height: 0px;
+		padding-top: 0px;
+	}
 	width: 100%;
-	line-height: 70px;
-	padding: 10px 0px 10px 50px;
+	z-index: 40;
+	.weatherView{
+		background-color: $bgTabSelect;
+		min-height: 400px;
+		margin: 0 50px;
+		@media (max-width: $minWidthDesk) {
+			margin: 0px;
+		} 
+		p{
+			margin: 0px;
+			line-height: 1;
+		}
+		img{
+			float: left;
+		}
+		div{
+			margin-top: 10px;
+			overflow: hidden;
+		}
+		box-sizing: border-box;
+		width: auto;
+		line-height: 70px;
+		padding: 10px 0px 10px 50px;
+	}
 }

@@ -67,30 +67,43 @@ article, aside, details, figcaption, figure, footer, header, hgroup, main, menu,
   display: block;
 }
 
-/* line 9, ../sass/style.scss */
+/* line 11, ../sass/style.scss */
 header {
-  background-color: #fac864;
+  background-color: #6400aa;
   height: 70px;
   line-height: 70px;
   padding-left: 50px;
 }
-
 /* line 16, ../sass/style.scss */
-.sectionForAddTab {
-  background-color: #ffdc78;
-  height: 70px;
-  line-height: 70px;
-  padding: 10px 0px 10px 50px;
+header h1 {
+  font-size: 25px;
+  color: white;
 }
 
-/* line 23, ../sass/style.scss */
+/* line 22, ../sass/style.scss */
+.sectionForAddTab {
+  background-color: #640096;
+  height: 50px;
+  line-height: 50px;
+  padding: 5px 0px 5px 50px;
+}
+
+/* line 29, ../sass/style.scss */
 .tabs {
-  background-color: #e6b450;
   height: 30px;
   padding: 20px 0px 0px 50px;
   overflow: hidden;
+  z-index: 50;
+  position: relative;
 }
-/* line 28, ../sass/style.scss */
+@media (max-width: 1079px) {
+  /* line 29, ../sass/style.scss */
+  .tabs {
+    height: auto;
+    background-color: #46008c;
+  }
+}
+/* line 39, ../sass/style.scss */
 .tabs .tab {
   display: inline-block;
   float: left;
@@ -99,29 +112,107 @@ header {
   text-align-last: center;
   text-align: center;
   line-height: 30px;
-  width: 100px;
+  width: 150px;
   cursor: pointer;
+  border-radius: 8px 8px 0 0;
+  border: 1px solid #646464;
+  background-color: #646464;
 }
-/* line 38, ../sass/style.scss */
+@media (max-width: 1079px) {
+  /* line 39, ../sass/style.scss */
+  .tabs .tab {
+    border-radius: 8px;
+    margin: 10px;
+  }
+}
+/* line 56, ../sass/style.scss */
+.tabs .tab .city {
+  display: inline-block;
+  float: left;
+  padding: 0 5px;
+  max-width: 100px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+/* line 65, ../sass/style.scss */
+.tabs .tab img {
+  display: inline-block;
+  float: left;
+  margin: 8px 0 0 5px;
+}
+/* line 70, ../sass/style.scss */
 .tabs .tab:hover {
-  background-color: #64321e;
+  background-color: rgba(150, 150, 150, 0.7);
 }
-/* line 42, ../sass/style.scss */
+/* line 74, ../sass/style.scss */
 .tabs .currentTab {
-  background-color: #64321e;
+  background-color: rgba(150, 150, 150, 0.7);
+}
+/* line 77, ../sass/style.scss */
+.tabs .removeTab {
+  background-color: white;
+  display: inline-block;
+  float: right;
+  height: 16px;
+  width: 16px;
+  line-height: 15px;
+  cursor: pointer;
+  border-radius: 50%;
+}
+/* line 86, ../sass/style.scss */
+.tabs .removeTab:hover {
+  background-color: red;
 }
 
-/* line 46, ../sass/style.scss */
+/* line 91, ../sass/style.scss */
 .tabs:after {
   clear: both;
 }
 
-/* line 49, ../sass/style.scss */
-.weatherView {
-  background-color: #cddc96;
-  height: 70px;
-  box-sizing: border-box;
+/* line 94, ../sass/style.scss */
+.bgWeather {
+  height: 500px;
+  position: relative;
+  top: -50px;
+  padding-top: 50px;
   width: 100%;
+  z-index: 40;
+}
+@media (max-width: 1079px) {
+  /* line 94, ../sass/style.scss */
+  .bgWeather {
+    top: 0px;
+    height: 0px;
+    padding-top: 0px;
+  }
+}
+/* line 106, ../sass/style.scss */
+.bgWeather .weatherView {
+  background-color: rgba(150, 150, 150, 0.7);
+  min-height: 400px;
+  margin: 0 50px;
+  box-sizing: border-box;
+  width: auto;
   line-height: 70px;
   padding: 10px 0px 10px 50px;
+}
+@media (max-width: 1079px) {
+  /* line 106, ../sass/style.scss */
+  .bgWeather .weatherView {
+    margin: 0px;
+  }
+}
+/* line 113, ../sass/style.scss */
+.bgWeather .weatherView p {
+  margin: 0px;
+  line-height: 1;
+}
+/* line 117, ../sass/style.scss */
+.bgWeather .weatherView img {
+  float: left;
+}
+/* line 120, ../sass/style.scss */
+.bgWeather .weatherView div {
+  overflow: hidden;
 }
