@@ -7,8 +7,6 @@ import {WeatherView} from './components/view';
 var WeatherApp = React.createClass({
 	tabsArr: [
 	'http://api.openweathermap.org/data/2.5/weather?q=London&appid=5eca46ddb92cb7b41c092d7991685bf5',
-	'http://api.openweathermap.org/data/2.5/weather?q=Kharkov&appid=5eca46ddb92cb7b41c092d7991685bf5',
-	'http://api.openweathermap.org/data/2.5/weather?q=Kiev&appid=5eca46ddb92cb7b41c092d7991685bf5',
 	'http://api.openweathermap.org/data/2.5/weather?q=Moscow&appid=5eca46ddb92cb7b41c092d7991685bf5'],
 	getXmlHttp: function () {
 		var xmlhttp;
@@ -40,35 +38,40 @@ var WeatherApp = React.createClass({
 	},
 	getInitialState: function(){
 		let jsonArr=[],
-			jsonFunc = this.getJson;
+			jsonFunc = this.getJson,
+			current=null;
+
+		if (localStorage.getItem('fullWeather')) {
+			this.tabsArr=JSON.parse(localStorage.getItem('tabsArr'));
+			current=JSON.parse(localStorage.getItem('fullWeather'));
+		}
 
 		this.tabsArr.map(function(tab) {
 			jsonArr.push(jsonFunc(tab));
 		});
-		return {'jsonArr':jsonArr,fullWeather:null};
+		return {'jsonArr':jsonArr,fullWeather:current};
 	},
 	handleWeatherUpdate: function(newCurrentTab) {
+		this.setLocalStorage();
 		this.setState({
 			fullWeather: newCurrentTab
 		})
-	},
-	firstView: function() {
-		if (!this.state.jsonArr){
-			return false;
-		}
-		this.handleWeatherUpdate(this.state.jsonArr[0]);
-		return true;
+		localStorage.setItem('fullWeather',JSON.stringify(newCurrentTab));
+		localStorage.setItem('tabsArr',JSON.stringify(this.tabsArr));
 	},
 	mapArr: function(that) {
 		let jsx=that.state.jsonArr.map(function(tab) {
 			return (<Tab key={tab.id} 
-				current={that.state.fullWeather === null?
-					that.firstView():tab.id === that.state.fullWeather.id} 
+				current={that.state.fullWeather?tab.id === that.state.fullWeather.id:false} 
 				tabLink = {tab} 
 				removeTab={that.removeTab}
 				fullWeather={that.handleWeatherUpdate}/>)
 		})
 		return jsx;
+	},
+	setLocalStorage: function() {
+		localStorage.setItem('fullWeather',JSON.stringify(this.state.fullWeather));
+		localStorage.setItem('tabsArr',JSON.stringify(this.tabsArr));
 	},
 	addTab: function(city) {
 		if(this.state.jsonArr.length>5) {
@@ -92,12 +95,16 @@ var WeatherApp = React.createClass({
 
 		if (tab){	
 			this.state.jsonArr.push(tab);
+			this.tabsArr.push('http://api.openweathermap.org/data/2.5/weather?q='+city+'&appid=5eca46ddb92cb7b41c092d7991685bf5');
 			this.handleWeatherUpdate(this.state.fullWeather);
 		}
+		
 	},
 	removeTab: function(tab) {
+		this.tabsArr.splice(this.state.jsonArr.indexOf(tab),1);
 		this.state.jsonArr.splice(this.state.jsonArr.indexOf(tab),1);
 		this.handleWeatherUpdate(this.state.fullWeather);
+
 	},
 	render: function() {
 		return (

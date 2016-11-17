@@ -204,15 +204,47 @@ header h1 {
   }
 }
 /* line 113, ../sass/style.scss */
+.bgWeather .weatherView h2 {
+  font-size: 25px;
+}
+/* line 116, ../sass/style.scss */
 .bgWeather .weatherView p {
   margin: 0px;
   line-height: 1;
 }
-/* line 117, ../sass/style.scss */
+/* line 120, ../sass/style.scss */
 .bgWeather .weatherView img {
   float: left;
+  margin-right: 10px;
 }
-/* line 120, ../sass/style.scss */
-.bgWeather .weatherView div {
-  overflow: hidden;
+@media (min-width: 451px) {
+  /* line 125, ../sass/style.scss */
+  .bgWeather .weatherView .temperature {
+    overflow: hidden;
+    width: 200px;
+    margin: 20px 20px 50px 0;
+    float: left;
+  }
+  /* line 130, ../sass/style.scss */
+  .bgWeather .weatherView .temperature p {
+    margin-top: 10px;
+  }
+}
+@media (min-width: 451px) {
+  /* line 136, ../sass/style.scss */
+  .bgWeather .weatherView .wind {
+    margin-right: 50px;
+    float: right;
+  }
+}
+@media (max-width: 450px) {
+  /* line 142, ../sass/style.scss */
+  .bgWeather .weatherView .wind, .bgWeather .weatherView .temperature {
+    margin: 50px 0;
+    text-align-last: center;
+  }
+}
+/* line 147, ../sass/style.scss */
+.bgWeather .weatherView .wind p {
+  margin-bottom: 30px;
 }

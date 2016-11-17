@@ -63,7 +63,7 @@
 	var WeatherApp = React.createClass({
 		displayName: 'WeatherApp',
 
-		tabsArr: ['http://api.openweathermap.org/data/2.5/weather?q=London&appid=5eca46ddb92cb7b41c092d7991685bf5', 'http://api.openweathermap.org/data/2.5/weather?q=Kharkov&appid=5eca46ddb92cb7b41c092d7991685bf5', 'http://api.openweathermap.org/data/2.5/weather?q=Kiev&appid=5eca46ddb92cb7b41c092d7991685bf5', 'http://api.openweathermap.org/data/2.5/weather?q=Moscow&appid=5eca46ddb92cb7b41c092d7991685bf5'],
+		tabsArr: ['http://api.openweathermap.org/data/2.5/weather?q=London&appid=5eca46ddb92cb7b41c092d7991685bf5', 'http://api.openweathermap.org/data/2.5/weather?q=Moscow&appid=5eca46ddb92cb7b41c092d7991685bf5'],
 		getXmlHttp: function getXmlHttp() {
 			var xmlhttp;
 			try {
@@ -94,34 +94,40 @@
 		},
 		getInitialState: function getInitialState() {
 			var jsonArr = [],
-			    jsonFunc = this.getJson;
+			    jsonFunc = this.getJson,
+			    current = null;
+
+			if (localStorage.getItem('fullWeather')) {
+				this.tabsArr = JSON.parse(localStorage.getItem('tabsArr'));
+				current = JSON.parse(localStorage.getItem('fullWeather'));
+			}
 
 			this.tabsArr.map(function (tab) {
 				jsonArr.push(jsonFunc(tab));
 			});
-			return { 'jsonArr': jsonArr, fullWeather: null };
+			return { 'jsonArr': jsonArr, fullWeather: current };
 		},
 		handleWeatherUpdate: function handleWeatherUpdate(newCurrentTab) {
+			this.setLocalStorage();
 			this.setState({
 				fullWeather: newCurrentTab
 			});
-		},
-		firstView: function firstView() {
-			if (!this.state.jsonArr) {
-				return false;
-			}
-			this.handleWeatherUpdate(this.state.jsonArr[0]);
-			return true;
+			localStorage.setItem('fullWeather', JSON.stringify(newCurrentTab));
+			localStorage.setItem('tabsArr', JSON.stringify(this.tabsArr));
 		},
 		mapArr: function mapArr(that) {
 			var jsx = that.state.jsonArr.map(function (tab) {
 				return React.createElement(_tab.Tab, { key: tab.id,
-					current: that.state.fullWeather === null ? that.firstView() : tab.id === that.state.fullWeather.id,
+					current: that.state.fullWeather ? tab.id === that.state.fullWeather.id : false,
 					tabLink: tab,
 					removeTab: that.removeTab,
 					fullWeather: that.handleWeatherUpdate });
 			});
 			return jsx;
+		},
+		setLocalStorage: function setLocalStorage() {
+			localStorage.setItem('fullWeather', JSON.stringify(this.state.fullWeather));
+			localStorage.setItem('tabsArr', JSON.stringify(this.tabsArr));
 		},
 		addTab: function addTab(city) {
 			if (this.state.jsonArr.length > 5) {
@@ -145,10 +151,12 @@
 
 			if (tab) {
 				this.state.jsonArr.push(tab);
+				this.tabsArr.push('http://api.openweathermap.org/data/2.5/weather?q=' + city + '&appid=5eca46ddb92cb7b41c092d7991685bf5');
 				this.handleWeatherUpdate(this.state.fullWeather);
 			}
 		},
 		removeTab: function removeTab(tab) {
+			this.tabsArr.splice(this.state.jsonArr.indexOf(tab), 1);
 			this.state.jsonArr.splice(this.state.jsonArr.indexOf(tab), 1);
 			this.handleWeatherUpdate(this.state.fullWeather);
 		},
@@ -19948,11 +19956,18 @@
 	var WeatherView = exports.WeatherView = React.createClass({
 		displayName: "WeatherView",
 
-		componentDidUpdate: function componentDidUpdate() {
+		componentDidMount: function componentDidMount() {
 			if (this.props.fullWeather) {
 				document.getElementById('bgWeather').style = "background: url('img/" + this.props.fullWeather.weather[0].main + ".gif');\
 					background-size: 100% auto;";
-			}return true;
+				document.getElementById('wind').style = "transform: rotate(" + this.props.fullWeather.wind.deg + "deg);" + "-moz-transform: rotate(" + this.props.fullWeather.wind.deg + "deg);" + "-ms-transform: rotate(" + this.props.fullWeather.wind.deg + "deg);" + "-webkit-transform: rotate(" + this.props.fullWeather.wind.deg + "deg);" + "-o-transform: rotate(" + this.props.fullWeather.wind.deg + "deg)";
+			} else {
+				document.getElementById('bgWeather').style = "background: none";
+			}
+			return true;
+		},
+		componentDidUpdate: function componentDidUpdate() {
+			this.componentDidMount();
 		},
 		check: function check() {
 			if (this.props.fullWeather === null) return React.createElement(
@@ -19961,7 +19976,7 @@
 				React.createElement(
 					"h2",
 					null,
-					"Add city. Thank you"
+					"Choose city. Thank you"
 				)
 			);
 			return React.createElement(
@@ -19975,17 +19990,18 @@
 				React.createElement(
 					"p",
 					null,
-					"main: ",
-					this.props.fullWeather.weather[0].main
+					"There are ",
+					this.props.fullWeather.weather[0].main,
+					" here"
 				),
 				React.createElement(
 					"div",
-					null,
+					{ className: "temperature" },
 					React.createElement("img", { src: "img/termp.jpg", height: "100px", alt: "img" }),
 					React.createElement(
 						"p",
 						null,
-						"Maximum temperature: ",
+						"Max temperature: ",
 						this.props.fullWeather.main.temp_max
 					),
 					React.createElement(
@@ -19997,15 +20013,20 @@
 					React.createElement(
 						"p",
 						null,
-						"Minimum temperature: ",
+						"Min temperature: ",
 						this.props.fullWeather.main.temp_min
 					)
 				),
 				React.createElement(
-					"p",
-					null,
-					"main: ",
-					this.props.fullWeather.weather[0].main
+					"div",
+					{ className: "wind" },
+					React.createElement(
+						"p",
+						null,
+						"Wind speed: ",
+						this.props.fullWeather.wind.speed
+					),
+					React.createElement("img", { id: "wind", src: "img/arrow.gif", height: "50px", alt: "img" })
 				)
 			);
 		},

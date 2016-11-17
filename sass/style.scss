@@ -110,16 +110,42 @@ header{
 		@media (max-width: $minWidthDesk) {
 			margin: 0px;
 		} 
+		h2{
+			font-size: 25px;
+		}
 		p{
 			margin: 0px;
 			line-height: 1;
 		}
 		img{
 			float: left;
+			margin-right: 10px;
 		}
-		div{
-			margin-top: 10px;
-			overflow: hidden;
+		@media (min-width: 451px) {
+			.temperature{
+				overflow: hidden;
+				width: 200px;
+				margin: 20px 20px 50px 0;
+				float: left;
+				p{
+					margin-top: 10px;
+				}
+			}
+		}
+		@media (min-width: 451px) {
+			.wind{
+				margin-right: 50px;
+				float: right;
+			}
+		}
+		@media (max-width: 450px) {
+			.wind, .temperature{
+			margin: 50px 0;
+			text-align-last: center;
+			}
+		} 
+		.wind p{
+			margin-bottom: 30px;
 		}
 		box-sizing: border-box;
 		width: auto;
